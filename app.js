@@ -17,7 +17,7 @@ generateBtn.addEventListener("click", () => {
       format: format,
       width: 2,
       height: 90,
-      displayValue: displayValue
+      displayValue: false
     });
   } catch (err) {
     alert("Error generating barcode: " + err.message);
