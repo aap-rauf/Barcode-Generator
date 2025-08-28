@@ -58,3 +58,30 @@
   <script src="app.js"></script>
 </body>
 </html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Barcode Generator</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <h1>Barcode Generator</h1>
+
+    <label for="formatSelector">Select Format:</label>
+    <select id="formatSelector">
+        <option value="CODE128">CODE128</option>
+        <option value="EAN13">EAN13</option>
+        <option value="UPC">UPC</option>
+    </select>
+
+    <textarea id="inputData" placeholder="Enter data here"></textarea>
+
+    <button id="generateBtn">Generate</button>
+
+    <div id="barcode"></div>
+
+    <script src="app.js"></script>
+</body>
+</html>
