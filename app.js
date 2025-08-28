@@ -12,12 +12,16 @@ generateBtn.addEventListener("click", () => {
     return;
   }
 
-  JsBarcode(barcode, value, {
-    format: format,
-    width: 2,
-    height: 90,
-    displayValue: displayValue
-  });
+  try {
+    JsBarcode(barcode, value, {
+      format: format,
+      width: 2,
+      height: 90,
+      displayValue: displayValue
+    });
+  } catch (err) {
+    alert("Error generating barcode: " + err.message);
+  }
 });
 
 clearBtn.addEventListener("click", () => {
