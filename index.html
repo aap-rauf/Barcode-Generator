@@ -10,8 +10,7 @@
 <body>
   <header class="header">
     <h1>Barcode Generator</h1>
-    <p class="muted">Generate and download barcodes (Code128, EAN13, UPC, Code39).</p>
-  </header>
+    
 
   <main class="container card">
     <label class="label">Data / Number</label>
@@ -58,71 +57,3 @@
   <script src="app.js"></script>
 </body>
 </html>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Barcode Generator</title>
-    <link rel="stylesheet" href="styles.css">
-</head>
-<body>
-    <h1>Barcode Generator</h1>
-
-    <label for="formatSelector">Select Format:</label>
-    <select id="formatSelector">
-        <option value="CODE128">CODE128</option>
-        <option value="EAN13">EAN13</option>
-        <option value="UPC">UPC</option>
-    </select>
-
-    <textarea id="inputData" placeholder="Enter data here"></textarea>
-
-    <button id="generateBtn">Generate</button>
-
-    <div id="barcode"></div>
-
-    <script src="app.js"></script>
-</body>
-</html>
-body {
-    font-family: Arial, sans-serif;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 20px;
-}
-
-h1 {
-    font-size: 24px;
-    text-align: center;
-    max-width: 300px;
-    margin: 0 auto 20px auto;
-    word-wrap: break-word;
-}
-
-#formatSelector {
-    margin-bottom: 10px;
-    padding: 5px;
-    font-size: 16px;
-}
-
-#inputData {
-    width: 400px;
-    height: 200px;
-    padding: 10px;
-    font-size: 16px;
-    margin-bottom: 20px;
-}
-
-#generateBtn {
-    font-size: 24px;
-    padding: 15px 30px;
-    width: 100%;
-    max-width: 400px;
-    margin-bottom: 20px;
-}
-
-#barcode {
-    margin-top: 20px;
-}
