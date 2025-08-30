@@ -38,7 +38,7 @@
     .buttons {
       margin-top: 15px;
       display: flex;
-      justify-content: space-between;
+      justify-content: center;
       gap: 10px;
     }
 
@@ -79,8 +79,8 @@
     <input id="dataInput" placeholder="Enter text or numbers" value="123456789012"/>
 
     <div class="buttons">
-      <button id="paste" class="btn primary">Paste</button>
       <button id="clear" class="btn secondary">Clear</button>
+      <button id="paste" class="btn primary">Paste</button>
     </div>
 
     <div id="preview" class="preview">
@@ -96,15 +96,19 @@
 
     // Function to generate barcode live
     function generateBarcode(value) {
-      if (value.trim() !== "") {
-        JsBarcode(barcodeEl, value, {
-          format: "CODE128",
-          width: 2,
-          height: 90,
-          displayValue: false
-        });
-      } else {
-        barcodeEl.innerHTML = "";
+      try {
+        if (value.trim() !== "") {
+          JsBarcode(barcodeEl, value, {
+            format: "CODE128",
+            width: 2,
+            height: 90,
+            displayValue: false
+          });
+        } else {
+          barcodeEl.innerHTML = "";
+        }
+      } catch (e) {
+        barcodeEl.innerHTML = "Invalid barcode!";
       }
     }
 
