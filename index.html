@@ -13,9 +13,9 @@
   <style>
     body {
       font-family: Arial, sans-serif;
+      background: #f9f9f9;
       margin: 0;
       padding: 0;
-      background: #f9f9f9;
     }
     .header {
       text-align: center;
@@ -66,6 +66,9 @@
       text-align: center;
       margin-top: 1rem;
     }
+    svg {
+      max-width: 100%;
+    }
   </style>
 </head>
 <body>
@@ -74,58 +77,75 @@
     <p class="muted">By Rauf</p>
   </header>
 
-  <main class="container card">
+  <main class="container">
     <label class="label">Value</label>
     <input id="dataInput" class="input" placeholder="Enter text or numbers" value="123456789012"/>
 
     <div class="buttons">
       <button id="clear" class="btn secondary">Clear</button>
-      <button id="genBarcode" class="btn primary">Generate Barcode</button>
-      <button id="genQR" class="btn primary">Generate QR</button>
+      <button id="genBarcode" class="btn primary">Barcode</button>
+      <button id="genQR" class="btn primary">QR</button>
     </div>
 
     <section id="preview" class="preview">
-      <div id="barcode"></div>
+      <svg id="barcode"></svg>
+      <div id="qrcode"></div>
     </section>
   </main>
 
   <script>
     const dataInput = document.getElementById("dataInput");
-    const barcodeContainer = document.getElementById("barcode");
+    const barcodeSVG = document.getElementById("barcode");
+    const qrDiv = document.getElementById("qrcode");
 
-    // Generate CODE128 Barcode
-    document.getElementById("genBarcode").addEventListener("click", function () {
-      const data = dataInput.value;
-      barcodeContainer.innerHTML = "";
+    let mode = "barcode"; // default mode
 
-      const svg = document.createElement("svg");
-      barcodeContainer.appendChild(svg);
+    function generate() {
+      const data = dataInput.value.trim();
+      barcodeSVG.innerHTML = "";
+      qrDiv.innerHTML = "";
 
-      JsBarcode(svg, data, {
-        format: "CODE128",
-        width: 2,
-        height: 90,
-        displayValue: false
-      });
+      if (!data) return;
+
+      if (mode === "barcode") {
+        JsBarcode(barcodeSVG, data, {
+          format: "CODE128",
+          width: 2,
+          height: 90,
+          displayValue: false
+        });
+      } else if (mode === "qr") {
+        new QRCode(qrDiv, {
+          text: data,
+          width: 150,
+          height: 150
+        });
+      }
+    }
+
+    // Buttons to switch mode
+    document.getElementById("genBarcode").addEventListener("click", () => {
+      mode = "barcode";
+      generate();
     });
 
-    // Generate QR Code
-    document.getElementById("genQR").addEventListener("click", function () {
-      const data = dataInput.value;
-      barcodeContainer.innerHTML = "";
-
-      new QRCode(barcodeContainer, {
-        text: data,
-        width: 150,
-        height: 150
-      });
+    document.getElementById("genQR").addEventListener("click", () => {
+      mode = "qr";
+      generate();
     });
 
     // Clear
-    document.getElementById("clear").addEventListener("click", function () {
-      barcodeContainer.innerHTML = "";
+    document.getElementById("clear").addEventListener("click", () => {
+      barcodeSVG.innerHTML = "";
+      qrDiv.innerHTML = "";
       dataInput.value = "";
     });
+
+    // Auto-generate on typing
+    dataInput.addEventListener("input", generate);
+
+    // Generate first time with default value
+    generate();
   </script>
 </body>
 </html>
