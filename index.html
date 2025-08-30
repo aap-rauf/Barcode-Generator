@@ -29,7 +29,7 @@
       font-weight: bold;
     }
 
-    input, select {
+    input {
       margin: 5px 0;
       padding: 8px;
       width: 200px;
@@ -39,6 +39,7 @@
       margin-top: 15px;
       display: flex;
       justify-content: space-between;
+      gap: 10px;
     }
 
     .btn {
@@ -48,13 +49,13 @@
       cursor: pointer;
     }
 
-    .btn.primary {
-      background: #007bff;
+    .btn.secondary {
+      background: #6c757d;
       color: white;
     }
 
-    .btn.secondary {
-      background: #6c757d;
+    .btn.primary {
+      background: #007bff;
       color: white;
     }
 
@@ -74,17 +75,12 @@
     <h1>Barcode Generator</h1>
     <p class="muted">By Rauf</p>
 
-    <label for="format">Format</label>
-    <select id="format">
-      <option value="CODE128">CODE128</option>
-    </select>
-
     <label for="dataInput">Value</label>
     <input id="dataInput" placeholder="Enter text or numbers" value="123456789012"/>
 
     <div class="buttons">
+      <button id="paste" class="btn primary">Paste</button>
       <button id="clear" class="btn secondary">Clear</button>
-      <button id="generate" class="btn primary">Generate</button>
     </div>
 
     <div id="preview" class="preview">
@@ -93,24 +89,53 @@
   </div>
 
   <script>
-    const generateBtn = document.getElementById("generate");
+    const inputEl = document.getElementById("dataInput");
     const clearBtn = document.getElementById("clear");
+    const pasteBtn = document.getElementById("paste");
     const barcodeEl = document.getElementById("barcode");
 
-    generateBtn.addEventListener("click", () => {
-      const value = document.getElementById("dataInput").value;
-      JsBarcode(barcodeEl, value, {
-        format: "CODE128",
-        width: 2,
-        height: 90,
-        displayValue: false // hides value text under barcode
-      });
+    // Function to generate barcode live
+    function generateBarcode(value) {
+      if (value.trim() !== "") {
+        JsBarcode(barcodeEl, value, {
+          format: "CODE128",
+          width: 2,
+          height: 90,
+          displayValue: false
+        });
+      } else {
+        barcodeEl.innerHTML = "";
+      }
+    }
+
+    // Live update while typing
+    inputEl.addEventListener("input", () => {
+      generateBarcode(inputEl.value);
     });
 
+    // Clear button
     clearBtn.addEventListener("click", () => {
+      inputEl.value = "";
       barcodeEl.innerHTML = "";
-      document.getElementById("dataInput").value = "";
     });
+
+    // Paste button
+    pasteBtn.addEventListener("click", async () => {
+      try {
+        const text = await navigator.clipboard.readText();
+        if (text) {
+          inputEl.value = text;
+          generateBarcode(text);
+        } else {
+          alert("Clipboard is empty!");
+        }
+      } catch (err) {
+        alert("Clipboard access not allowed in this browser.");
+      }
+    });
+
+    // Generate default on load
+    generateBarcode(inputEl.value);
   </script>
 </body>
 </html>
