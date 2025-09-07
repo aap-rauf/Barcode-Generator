@@ -1,37 +1,38 @@
-const CACHE_NAME = "barcode-cache-v2"; // change version when you update
+const CACHE_NAME = "barcode-cache-v2"; // change v2 → v3 when you update
 const FILES_TO_CACHE = [
   "./",
   "./index.html",
-  "./styles.css",
-  "./app.js",
+  "./style.css",
   "./manifest.json",
+  "./app.js",
   "./icon-light-192.png",
   "./icon-light-512.png"
 ];
 
-// Install: cache files
+// Install event → cache files
 self.addEventListener("install", event => {
   event.waitUntil(
     caches.open(CACHE_NAME).then(cache => {
       return cache.addAll(FILES_TO_CACHE);
     })
   );
-  self.skipWaiting(); // activate worker immediately
+  self.skipWaiting(); // activate immediately
 });
 
-// Activate: remove old caches
+// Activate event → delete old caches
 self.addEventListener("activate", event => {
   event.waitUntil(
     caches.keys().then(keys =>
       Promise.all(
-        keys.filter(key => key !== CACHE_NAME).map(key => caches.delete(key))
+        keys.filter(key => key !== CACHE_NAME)
+            .map(key => caches.delete(key))
       )
     )
   );
   self.clients.claim();
 });
 
-// Fetch: serve cached files if offline
+// Fetch event → serve from cache first, then network
 self.addEventListener("fetch", event => {
   event.respondWith(
     caches.match(event.request).then(response => {
