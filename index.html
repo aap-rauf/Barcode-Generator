@@ -4,12 +4,11 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <title>Barcode Generator</title>
-  <link rel="stylesheet" href="style.css">
 
-  <!-- PWA setup -->
+  <!-- PWA essentials -->
   <link rel="manifest" href="manifest.json">
+  <link rel="icon" href="icon-light-192.png" type="image/png">
   <meta name="theme-color" content="#007bff">
-  <link rel="icon" href="icon-192.png" type="image/png">
 
   <style>
     body {
@@ -76,7 +75,20 @@
       max-width: 100%;
     }
   </style>
+
+  <!-- Barcode Library -->
   <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
+
+  <!-- Service Worker Registration -->
+  <script>
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", () => {
+        navigator.serviceWorker.register("./service-worker.js")
+          .then(reg => console.log("✅ Service Worker registered:", reg))
+          .catch(err => console.error("❌ Service Worker failed:", err));
+      });
+    }
+  </script>
 </head>
 <body>
   <div class="container">
@@ -148,13 +160,6 @@
 
     // Generate default on load
     generateBarcode(inputEl.value);
-
-    // Register Service Worker (PWA)
-    if ("serviceWorker" in navigator) {
-      navigator.serviceWorker.register("service-worker.js")
-        .then(() => console.log("✅ Service Worker Registered"))
-        .catch(err => console.log("❌ Service Worker Error", err));
-    }
   </script>
 </body>
 </html>
