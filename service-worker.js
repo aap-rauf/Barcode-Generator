@@ -1,12 +1,12 @@
-const CACHE_NAME = "barcode-cache-v2"; // change v2 → v3 when you update
+const CACHE_NAME = "barcode-cache-v3"; // bumped version
 const FILES_TO_CACHE = [
   "./",
   "./index.html",
   "./style.css",
   "./manifest.json",
   "./app.js",
-  "./icon-light-192.png",
-  "./icon-light-512.png"
+  "./icon-rounded-192.png",
+  "./icon-rounded-512.png"
 ];
 
 // Install event → cache files
