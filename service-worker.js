@@ -1,12 +1,12 @@
-const CACHE_NAME = "barcode-cache-v3"; // bumped version
+const CACHE_NAME = "barcode-cache-v4"; // bumped version
 const FILES_TO_CACHE = [
   "./",
   "./index.html",
   "./style.css",
-  "./manifest.json",
+  "./manifest.json?v=3",
   "./app.js",
-  "./icon-rounded-192.png",
-  "./icon-rounded-512.png"
+  "./icon-rounded-192.png?v=3",
+  "./icon-rounded-512.png?v=3"
 ];
 
 // Install event → cache files
@@ -16,7 +16,8 @@ self.addEventListener("install", event => {
       return cache.addAll(FILES_TO_CACHE);
     })
   );
-  self.skipWaiting(); // activate immediately
+  self.addEventListener('install', () => console.log('[SW] install'));
+  self.addEventListener('activate', () => console.log('[SW] activate'));
 });
 
 // Activate event → delete old caches
