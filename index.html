@@ -9,7 +9,6 @@
   <link rel="manifest" href="manifest.json">
   <link rel="icon" type="image/png" sizes="192x192" href="icon-rounded-192.png?v=3">
   <link rel="apple-touch-icon" href="icon-rounded-512.png?v=3">
-  <link rel="manifest" href="manifest.json?v=3">
   <meta name="theme-color" content="#007bff">
 
   <style>
@@ -81,16 +80,9 @@
   <!-- Barcode Library -->
   <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
 
-  <!-- Service Worker Registration -->
-  <script>
-    if ("serviceWorker" in navigator) {
-      window.addEventListener("load", () => {
-        navigator.serviceWorker.register("./service-worker.js")
-          .then(reg => console.log("✅ Service Worker registered:", reg))
-          .catch(err => console.error("❌ Service Worker failed:", err));
-      });
-    }
-  </script>
+  <!-- QR Library -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
 </head>
 <body>
   <div class="container">
@@ -105,7 +97,10 @@
     </div>
 
     <div id="preview" class="preview">
-      <svg id="barcode"></svg>
+      <div id="barcodeWrap">
+        <svg id="barcode"></svg>
+      </div>
+      <div id="qrWrap" style="display:none;"></div>
     </div>
   </div>
 
@@ -113,54 +108,75 @@
     const inputEl = document.getElementById("dataInput");
     const clearBtn = document.getElementById("clear");
     const pasteBtn = document.getElementById("paste");
+    const barcodeWrap = document.getElementById("barcodeWrap");
+    const qrWrap = document.getElementById("qrWrap");
     const barcodeEl = document.getElementById("barcode");
 
-    // Function to generate barcode live
+    const QR_THRESHOLD = 14; // <---- change if you want
+
     function generateBarcode(value) {
-      try {
-        if (value.trim() !== "") {
-          JsBarcode(barcodeEl, value, {
-            format: "CODE128",
-            width: 2,
-            height: 90,
-            displayValue: false
-          });
-        } else {
-          barcodeEl.innerHTML = "";
-        }
-      } catch (e) {
-        barcodeEl.innerHTML = "Invalid barcode!";
+      JsBarcode(barcodeEl, value, {
+        format: "CODE128",
+        width: 2,
+        height: 90,
+        displayValue: false
+      });
+    }
+
+    function generateQRCode(value) {
+      qrWrap.innerHTML = "";
+      new QRCode(qrWrap, {
+        text: value,
+        width: 160,
+        height: 160
+      });
+    }
+
+    function updatePreview(value) {
+      if (!value.trim()) {
+        barcodeEl.innerHTML = "";
+        qrWrap.innerHTML = "";
+        return;
+      }
+
+      if (value.length > QR_THRESHOLD) {
+        barcodeWrap.style.display = "none";
+        qrWrap.style.display = "block";
+        generateQRCode(value);
+      } else {
+        qrWrap.style.display = "none";
+        barcodeWrap.style.display = "block";
+        generateBarcode(value);
       }
     }
 
-    // Live update while typing
+    // Live update
     inputEl.addEventListener("input", () => {
-      generateBarcode(inputEl.value);
+      updatePreview(inputEl.value);
     });
 
-    // Clear button
+    // Clear
     clearBtn.addEventListener("click", () => {
       inputEl.value = "";
       barcodeEl.innerHTML = "";
+      qrWrap.innerHTML = "";
     });
 
-    // Paste button
+    // Paste
     pasteBtn.addEventListener("click", async () => {
       try {
         const text = await navigator.clipboard.readText();
         if (text) {
           inputEl.value = text;
-          generateBarcode(text);
-        } else {
-          alert("Clipboard is empty!");
+          updatePreview(text);
         }
-      } catch (err) {
-        alert("Clipboard access not allowed in this browser.");
+      } catch {
+        alert("Clipboard not allowed.");
       }
     });
 
-    // Generate default on load
-    generateBarcode(inputEl.value);
+    // First load
+    updatePreview(inputEl.value);
   </script>
 </body>
 </html>
